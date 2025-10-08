@@ -1,0 +1,33 @@
+{
+  "op": "Project",
+  "exprs": [
+    { "as": "order_id", "expr": { "col": "o.order_id" } },
+    { "as": "country", "expr": { "col": "o.country" } },
+    { "as": "discounted_total", "expr": {
+        "op": "MUL",
+        "left": { "col": "o.total" },
+        "right": { "const": 0.9, "type": "float" }
+      } }
+  ],
+  "input": {
+    "op": "Select",
+    "predicate": {
+      "op": "EQ",
+      "left": { "col": "o.order_year" },
+      "right": { "const": 2024, "type": "int" }
+    },
+    "input": {
+      "op": "Select",
+      "predicate": {
+        "op": "EQ",
+        "left": { "col": "o.country" },
+        "right": { "const": "USA", "type": "string" }
+      },
+      "input": {
+        "op": "Scan",
+        "table": "orders.csv",
+        "as": "o"
+      }
+    }
+  }
+}

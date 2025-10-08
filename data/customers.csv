@@ -1,0 +1,6 @@
+customer_id,name,country,is_active,balance
+1,Alice,USA,true,120.50
+2,Bob,Canada,false,80.00
+3,Charlie,USA,true,300.00
+4,Diana,UK,true,150.75
+5,Edgar,Germany,false,50.25

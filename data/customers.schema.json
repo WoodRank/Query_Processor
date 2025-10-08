@@ -1,0 +1,11 @@
+{
+  "name": "customers",
+  "file": "customers.csv",
+  "columns": [
+    { "name": "customer_id", "type": "int" },
+    { "name": "name", "type": "string" },
+    { "name": "country", "type": "string" },
+    { "name": "is_active", "type": "bool" },
+    { "name": "balance", "type": "float" }
+  ]
+}
