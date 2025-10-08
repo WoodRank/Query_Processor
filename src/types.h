@@ -73,3 +73,26 @@ private:
     std::vector<ColumnInfo> schemaColumns;
     std::unordered_map<std::string, size_t> columnIndex;
 };
+
+// ADD THIS TO THE END OF src/types.h
+
+// Helper function to print a single Value variant.
+inline void printValue(const Value& val) {
+    // std::visit is a clean way to handle all types in a variant.
+    std::visit([](auto&& arg) {
+        std::cout << arg;
+    }, val);
+}
+
+// Helper function to print a whole tuple using its schema to label the columns.
+inline void printTuple(const Tuple& tuple, const Schema& schema) {
+    const auto& cols = schema.getColumns();
+    for (size_t i = 0; i < tuple.size(); ++i) {
+        std::cout << cols[i].name << ": ";
+        printValue(tuple[i]);
+        if (i < tuple.size() - 1) {
+            std::cout << " | ";
+        }
+    }
+    std::cout << std::endl;
+}
