@@ -37,6 +37,10 @@ public:
         return schemas_.at(tableName);
     }
 
+    void printAddress() const {
+        std::cout << "[Catalog::Debug] My memory address is: " << this << std::endl;
+    }
+
 private:
     void loadSchemaFromFile(const std::string& schemaPath) {
         std::ifstream f(schemaPath);

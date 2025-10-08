@@ -1,0 +1,33 @@
+{
+  "op": "Limit",
+  "limit": 10,
+  "input": {
+    "op": "Project",
+    "exprs": [
+      { "as": "order_id", "expr": { "col": "o.order_id" } },
+      { "as": "customer_id", "expr": { "col": "o.customer_id" } },
+      { "as": "total", "expr": { "col": "o.total" } }
+    ],
+    "input": {
+      "op": "Select",
+      "predicate": {
+        "op": "GT",
+        "left": { "col": "o.total" },
+        "right": { "const": 200.0, "type": "float" }
+      },
+      "input": {
+        "op": "Select",
+        "predicate": {
+          "op": "EQ",
+          "left": { "col": "o.status" },
+          "right": { "const": "OPEN", "type": "string" }
+        },
+        "input": {
+          "op": "Scan",
+          "table": "orders.csv",
+          "as": "o"
+        }
+      }
+    }
+  }
+}

@@ -12,4 +12,3 @@ The "../data/" is where the csv file and schema lives.
 There is also a simple bash program called "run_all_queries.sh" that runs all the queries for you.
 
 
-To validate these queries honestly I just did it by hand because the query and datasets were not big at all and they all turned out correct.

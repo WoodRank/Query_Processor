@@ -1,0 +1,21 @@
+{
+  "file": "testings.csv",
+  "columns": [
+    { "name": "orderkey", "type": "int" },
+    { "name": "partkey", "type": "int" },
+    { "name": "suppkey", "type": "int" },
+    { "name": "linenumber", "type": "int" },
+    { "name": "quantity", "type": "float" },
+    { "name": "extendedprice", "type": "float" },
+    { "name": "discount", "type": "float" },
+    { "name": "tax", "type": "float" },
+    { "name": "returnflag", "type": "string" },
+    { "name": "linestatus", "type": "string" },
+    { "name": "shipdate", "type": "string" },
+    { "name": "commitdate", "type": "string" },
+    { "name": "receiptdate", "type": "string" },
+    { "name": "shipinstruct", "type": "string" },
+    { "name": "shipmode", "type": "string" },
+    { "name": "comment", "type": "string" }
+  ]
+}

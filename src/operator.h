@@ -26,6 +26,9 @@ class ScanOperator : public Operator {
 public:
     ScanOperator(const std::string& tablePath, const std::string& alias, const Catalog& catalog)
         : tablePath_(tablePath), alias_(alias), catalog_(catalog) {
+
+            std::cout << "[ScanOperator::Debug] My catalog reference points to address: " << &catalog_ << std::endl;
+            catalog_.printAddress();
         
         // When a Scan is created, it must also create its output schema.
         // It qualifies each column name with its alias (e.g., "custkey" -> "c.custkey").
@@ -195,8 +198,6 @@ private:
     Schema outputSchema_; // The new schema we produce.
 };
 
-// ADD THIS CODE TO THE END OF src/operator.h
-
 // --- Limit Operator ---
 // Stops producing tuples after a specified limit has been reached.
 class LimitOperator : public Operator {
@@ -288,4 +289,162 @@ private:
     // State for the join algorithm
     Tuple leftTuple_;
     bool hasLeftTuple_ = false;
+};
+
+class BlockNestedLoopJoinOperator : public Operator {
+public:
+    BlockNestedLoopJoinOperator(std::unique_ptr<Operator> left, std::unique_ptr<Operator> right, std::unique_ptr<Expression> cond, size_t blockSize = 100)
+        : left_(std::move(left)), right_(std::move(right)), condition_(std::move(cond)), blockSize_(blockSize) {
+        outputSchema_ = Schema::merge(left_->getSchema(), right_->getSchema());
+    }
+
+    void open() override {
+        left_->open();
+        right_->open();
+        loadNextLeftBlock(); // Prime the pump with the first block
+    }
+
+    bool next(Tuple& tuple) override {
+        while (!leftBlock_.empty()) {
+            Tuple rightTuple;
+            // Scan the right side for the current left tuple
+            if (right_->next(rightTuple)) {
+                const auto& leftTuple = leftBlock_[blockIndex_];
+                Tuple combined = leftTuple;
+                combined.insert(combined.end(), rightTuple.begin(), rightTuple.end());
+                
+                if (std::get<bool>(condition_->evaluate(combined, outputSchema_))) {
+                    tuple = combined;
+                    return true; // Found a match
+                }
+            } else { // Right side is exhausted for the current left tuple
+                blockIndex_++; // Move to the next tuple in our block
+                if (blockIndex_ >= leftBlock_.size()) {
+                    // We've exhausted the current block, try to load a new one
+                    if (!loadNextLeftBlock()) {
+                        return false; // No more blocks to load from the left
+                    }
+                } else {
+                    // Reset right side for the next tuple in our block
+                    right_->close();
+                    right_->open();
+                }
+            }
+        }
+        return false; // Left side is exhausted
+    }
+
+    void close() override {
+        left_->close();
+        right_->close();
+    }
+    
+    const Schema& getSchema() const override { return outputSchema_; }
+
+private:
+    bool loadNextLeftBlock() {
+        leftBlock_.clear();
+        blockIndex_ = 0;
+        Tuple temp;
+        while (leftBlock_.size() < blockSize_ && left_->next(temp)) {
+            leftBlock_.push_back(temp);
+        }
+        // Reset the inner loop (right side) for the new block
+        right_->close();
+        right_->open();
+        return !leftBlock_.empty();
+    }
+
+    std::unique_ptr<Operator> left_;
+    std::unique_ptr<Operator> right_;
+    std::unique_ptr<Expression> condition_;
+    Schema outputSchema_;
+
+    // State for the BNLJ algorithm
+    size_t blockSize_;
+    std::vector<Tuple> leftBlock_;
+    size_t blockIndex_ = 0;
+};
+// --- Hash Join Operator ---
+// Performs an efficient equijoin by hashing one table and probing with the other.
+class HashJoinOperator : public Operator {
+public:
+    HashJoinOperator(std::unique_ptr<Operator> left, std::unique_ptr<Operator> right, 
+                     std::unique_ptr<Expression> probeKey, std::unique_ptr<Expression> buildKey)
+        : probe_(std::move(left)), build_(std::move(right)), 
+          probeKeyExpr_(std::move(probeKey)), buildKeyExpr_(std::move(buildKey)) {
+        outputSchema_ = Schema::merge(probe_->getSchema(), build_->getSchema());
+    }
+
+    void open() override {
+        // 1. Build Phase: Read all tuples from the right input and build the hash table.
+        hashTable_.clear();
+        build_->open();
+        Tuple buildTuple;
+        while (build_->next(buildTuple)) {
+            Value key = buildKeyExpr_->evaluate(buildTuple, build_->getSchema());
+            hashTable_[key].push_back(buildTuple);
+        }
+        build_->close();
+
+        // 2. Probe Phase Setup: Open the left input to prepare for probing.
+        probe_->open();
+        hasProbeTuple_ = false; // Ensure we fetch a new probe tuple first
+    }
+
+    bool next(Tuple& tuple) override {
+        while (true) {
+            // If we have a valid iterator, we have more matches for the current probe tuple.
+            if (hasProbeTuple_ && matchIterator_ != matchEndIterator_) {
+                const Tuple& buildTuple = *matchIterator_;
+                tuple = probeTuple_;
+                tuple.insert(tuple.end(), buildTuple.begin(), buildTuple.end());
+                matchIterator_++; // Advance to the next match for this key
+                return true;
+            }
+
+            // Otherwise, get the next tuple from the probe (left) side.
+            hasProbeTuple_ = probe_->next(probeTuple_);
+            if (!hasProbeTuple_) {
+                return false; // Probe side is exhausted, join is complete.
+            }
+
+            // We have a new probe tuple; find its matches in the hash table.
+            Value key = probeKeyExpr_->evaluate(probeTuple_, probe_->getSchema());
+            auto range = hashTable_.find(key);
+            if (range != hashTable_.end()) {
+                // Found matches, set up iterators
+                matchIterator_ = range->second.begin();
+                matchEndIterator_ = range->second.end();
+            } else {
+                // No matches, create empty iterators
+                matchIterator_ = end(emptyVec_);
+                matchEndIterator_ = end(emptyVec_);
+            }
+        }
+    }
+
+    void close() override {
+        probe_->close();
+        // build_ is already closed after the build phase
+    }
+
+    const Schema& getSchema() const override { return outputSchema_; }
+
+private:
+    std::unique_ptr<Operator> probe_; // Left input
+    std::unique_ptr<Operator> build_; // Right input
+    std::unique_ptr<Expression> probeKeyExpr_;
+    std::unique_ptr<Expression> buildKeyExpr_;
+    Schema outputSchema_;
+
+    // State for the hash join algorithm
+    std::unordered_map<Value, std::vector<Tuple>> hashTable_;
+    Tuple probeTuple_;
+    bool hasProbeTuple_ = false;
+    std::vector<Tuple> emptyVec_; // For failed lookups
+
+    // Iterators to navigate matches for the current probe tuple
+    std::vector<Tuple>::const_iterator matchIterator_;
+    std::vector<Tuple>::const_iterator matchEndIterator_;
 };

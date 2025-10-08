@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/zaudan/VSCODE/Query_Processor/include
+CXX_INCLUDES = -I/Users/zaudan/VSCODE/TESTQUERY/Query_Processor/include
 
 CXX_FLAGSarm64 = -std=gnu++17 -arch arm64
 

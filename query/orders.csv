@@ -1,0 +1,6 @@
+order_id,customer_id,status,total,country,order_year
+1,1,SHIPPED,250.00,USA,2023
+2,2,OPEN,75.50,Canada,2024
+3,1,OPEN,520.00,USA,2024
+4,3,CANCELLED,40.00,USA,2023
+5,4,OPEN,310.00,Germany,2024

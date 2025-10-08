@@ -54,10 +54,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/zaudan/VSCODE/Query_Processor
+CMAKE_SOURCE_DIR = /Users/zaudan/VSCODE/TESTQUERY/Query_Processor
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/zaudan/VSCODE/Query_Processor/build
+CMAKE_BINARY_DIR = /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -85,14 +85,14 @@ clean: CMakeFiles/query_processor.dir/clean
 CMakeFiles/query_processor.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/query_processor.dir/build.make CMakeFiles/query_processor.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/query_processor.dir/build.make CMakeFiles/query_processor.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zaudan/VSCODE/Query_Processor/build/CMakeFiles --progress-num=1,2 "Built target query_processor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build/CMakeFiles --progress-num=1,2 "Built target query_processor"
 .PHONY : CMakeFiles/query_processor.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/query_processor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zaudan/VSCODE/Query_Processor/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/query_processor.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zaudan/VSCODE/Query_Processor/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build/CMakeFiles 0
 .PHONY : CMakeFiles/query_processor.dir/rule
 
 # Convenience name for target.
@@ -102,7 +102,7 @@ query_processor: CMakeFiles/query_processor.dir/rule
 # codegen rule for target.
 CMakeFiles/query_processor.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/query_processor.dir/build.make CMakeFiles/query_processor.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zaudan/VSCODE/Query_Processor/build/CMakeFiles --progress-num=1,2 "Finished codegen for target query_processor"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build/CMakeFiles --progress-num=1,2 "Finished codegen for target query_processor"
 .PHONY : CMakeFiles/query_processor.dir/codegen
 
 # clean rule for target.

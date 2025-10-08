@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/zaudan/VSCODE/Query_Processor/build/cmake_install.cmake"
+		"/Users/zaudan/VSCODE/TESTQUERY/Query_Processor/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

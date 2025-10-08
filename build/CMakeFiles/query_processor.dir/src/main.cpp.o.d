@@ -1,8 +1,8 @@
 CMakeFiles/query_processor.dir/src/main.cpp.o: \
-  /Users/zaudan/VSCODE/Query_Processor/src/main.cpp \
-  /Users/zaudan/VSCODE/Query_Processor/src/plan_parser.h \
-  /Users/zaudan/VSCODE/Query_Processor/src/operator.h \
-  /Users/zaudan/VSCODE/Query_Processor/src/types.h \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/main.cpp \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/plan_parser.h \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/operator.h \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/types.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/string \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/max.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -959,8 +959,8 @@ CMakeFiles/query_processor.dir/src/main.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__format/formatter_tuple.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/unistd.h \
-  /Users/zaudan/VSCODE/Query_Processor/src/catalog.h \
-  /Users/zaudan/VSCODE/Query_Processor/include/nlohmann/json.hpp \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/catalog.h \
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/include/nlohmann/json.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/forward_list \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/map \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__tree \
@@ -1020,4 +1020,5 @@ CMakeFiles/query_processor.dir/src/main.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/literals.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/fstream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream \
-  /Users/zaudan/VSCODE/Query_Processor/src/expression.h
+  /Users/zaudan/VSCODE/TESTQUERY/Query_Processor/src/expression.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/set

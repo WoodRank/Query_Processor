@@ -1,0 +1,38 @@
+{
+  "op": "Project",
+  "exprs": [
+    { "as": "order_id", "expr": { "col": "o.order_id" } },
+    { "as": "sku", "expr": { "col": "i.sku" } },
+    { "as": "line_total", "expr": {
+        "op": "MUL",
+        "left": { "col": "i.quantity" },
+        "right": { "col": "i.unit_price" }
+      } }
+  ],
+  "input": {
+    "op": "Select",
+    "predicate": {
+      "op": "EQ",
+      "left": { "col": "o.status" },
+      "right": { "const": "OPEN", "type": "string" }
+    },
+    "input": {
+      "op": "Join",
+      "condition": {
+        "op": "EQ",
+        "left": { "col": "o.order_id" },
+        "right": { "col": "i.order_id" }
+      },
+      "left": {
+        "op": "Scan",
+        "table": "orders.csv",
+        "as": "o"
+      },
+      "right": {
+        "op": "Scan",
+        "table": "order_items.csv",
+        "as": "i"
+      }
+    }
+  }
+}

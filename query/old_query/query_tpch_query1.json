@@ -1,0 +1,54 @@
+{
+  "op": "Project",
+  "exprs": [
+    { "expr": { "col": "returnflag" }, "as": "l_returnflag" },
+    { "expr": { "col": "linestatus" }, "as": "l_linestatus" },
+    { "expr": { "col": "quantity" }, "as": "quantity" },
+    { "expr": { "col": "extendedprice" }, "as": "extendedprice" },
+    {
+      "expr": {
+        "op": "MUL",
+        "left": { "col": "extendedprice" },
+        "right": {
+          "op": "SUB",
+          "left": { "const": 1.0, "type": "float" },
+          "right": { "col": "discount" }
+        }
+      },
+      "as": "disc_price"
+    },
+    {
+      "expr": {
+        "op": "MUL",
+        "left": {
+          "op": "MUL",
+          "left": { "col": "extendedprice" },
+          "right": {
+            "op": "SUB",
+            "left": { "const": 1.0, "type": "float" },
+            "right": { "col": "discount" }
+          }
+        },
+        "right": {
+          "op": "ADD",
+          "left": { "const": 1.0, "type": "float" },
+          "right": { "col": "tax" }
+        }
+      },
+      "as": "charge"
+    }
+  ],
+  "input": {
+    "op": "Select",
+    "predicate": {
+      "op": "LTE",
+      "left": { "col": "shipdate" },
+      "right": { "const": "1998-09-02", "type": "string" }
+    },
+    "input": {
+      "op": "Scan",
+      "table": "testings.csv",
+      "as": "li"
+    }
+  }
+}

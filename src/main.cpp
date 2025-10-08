@@ -14,6 +14,7 @@ int main(int argc, char* argv[]) {
     try {
         // 2. Load all schemas from the data directory into our catalog.
         Catalog catalog;
+        std::cout << "[main::Debug] Created catalog at address: " << &catalog << std::endl;
         catalog.loadSchemas(data_dir);
         
         // 3. Read and parse the query plan JSON file.

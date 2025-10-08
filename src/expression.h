@@ -4,6 +4,7 @@
 #include <variant>
 #include <memory>   // For std::unique_ptr
 #include <stdexcept>
+#include <set>
 
 // Abstract base class for all expressions.
 class Expression {
@@ -12,6 +13,10 @@ public:
     
     // Evaluates the expression against a given tuple and schema, returning the result.
     virtual Value evaluate(const Tuple& tuple, const Schema& schema) const = 0;
+
+    
+    virtual void collectColumnRefs(std::set<std::string>& columns) const = 0;
+
 };
 
 // --- LEAF EXPRESSIONS (the end points of the tree) ---
@@ -21,6 +26,10 @@ class ConstantExpression : public Expression {
 public:
     explicit ConstantExpression(Value val) : value_(std::move(val)) {}
     
+    void collectColumnRefs(std::set<std::string>&) const override {
+        // Constants don't refer to columns, so do nothing.
+    }
+
     // Evaluating a constant is easy: just return it.
     Value evaluate(const Tuple&, const Schema&) const override { return value_; }
 
@@ -41,6 +50,10 @@ public:
     }
 
     const std::string& getColumnName() const { return colName_; }
+
+    void collectColumnRefs(std::set<std::string>& columns) const override {
+        columns.insert(colName_);
+    }
 private:
     std::string colName_;
 };
@@ -109,6 +122,11 @@ public:
 
         throw std::runtime_error("Unsupported or unimplemented binary operator: " + op_);
     }
+    void collectColumnRefs(std::set<std::string>& columns) const override {
+        left_->collectColumnRefs(columns);
+        right_->collectColumnRefs(columns);
+    }
+
 
 private:
     std::string op_;
@@ -125,6 +143,10 @@ public:
         Value val = expr_->evaluate(tuple, schema);
         return !std::get<bool>(val);
     }
+    void collectColumnRefs(std::set<std::string>& columns) const override {
+        expr_->collectColumnRefs(columns);
+    }
+
 private:
     std::unique_ptr<Expression> expr_;
 };
