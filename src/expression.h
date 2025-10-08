@@ -40,6 +40,7 @@ public:
         return tuple[colInfo.index];
     }
 
+    const std::string& getColumnName() const { return colName_; }
 private:
     std::string colName_;
 };
